@@ -12,22 +12,26 @@ function getFormValues() {
 async function getGiphy() {
     let value = getFormValues();
     let response = await axios.get("http://api.giphy.com/v1/gifs/search", { params: { q: value, api_key: "MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym" } });
-    // console.log(response.data.data[0].images.original.url)
-    return response.data.data[0].images.original.url;
+
+    let randomNum = Math.floor(Math.random() * response.data.data.length);
+    return response.data.data[randomNum].images.original.url;
 }
 
 async function addGiphy(evt) {
     evt.preventDefault();
     let gifUrl = await getGiphy();
+    let gif = $("<img>");
 
-    // console.log(gifUrl)
+    gif.addClass("gif")
+        .attr("src", gifUrl)
+        .css("margin", "20px")
+        .css("width", "400px")
 
-    let gif = $("<img>")
-    gif.addClass("gif").attr("src", gifUrl)
+    let displayContainer = $("#gif-display");
+    
+    displayContainer.append(gif);
 
-    console.log(gif)
-    let displayContainer = $("#gif-display")
-    displayContainer.append(gif)
+    $("#gif-input").val("");
 }
 
 $(".gif-form").on("submit", addGiphy)
